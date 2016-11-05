@@ -1,0 +1,6 @@
+C:\Users\Michael\Documents\Programs\4101 proj2\bin\Debug\Scheme4101.exe
+C:\Users\Michael\Documents\Programs\4101 proj2\bin\Debug\Scheme4101.pdb
+C:\Users\Michael\Documents\Programs\4101 proj2\bin\Debug\SPP.dll
+C:\Users\Michael\Documents\Programs\4101 proj2\obj\x86\Debug\Scheme4101.csprojResolveAssemblyReference.cache
+C:\Users\Michael\Documents\Programs\4101 proj2\obj\x86\Debug\Scheme4101.exe
+C:\Users\Michael\Documents\Programs\4101 proj2\obj\x86\Debug\Scheme4101.pdb

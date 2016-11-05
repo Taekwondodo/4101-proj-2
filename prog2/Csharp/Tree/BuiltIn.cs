@@ -27,7 +27,7 @@ namespace Tree
 
         // TODO: The method isProcedure() should be defined in
         // class Node to return false.
-        public /* override */ bool isProcedure()	{ return true; }
+        public  override  bool isProcedure()	{ return true; }
 
         public override void print(int n)
         {
@@ -45,9 +45,45 @@ namespace Tree
         // TODO: The method apply() should be defined in class Node
         // to report an error.  It should be overridden only in classes
         // BuiltIn and Closure.
-        public /* override */ Node apply (Node args)
+        public override Node apply(Node args)
         {
-            return new StringLit("Error: BuiltIn.apply not yet implemented");
+            Node result = new Node();
+            switch (symbol.getName())
+            {
+                case "symbol?":
+                    // symbol? only accepts 1 argument
+                    if (args.getCdr() != null)
+                        result = new StringLit("Error: wrong number of arguments for 'symbol?'");
+                    else
+                    {
+                        if (args.getCar().isSymbol())
+                            result = BoolLit.getInstance(true);
+                        else
+                            result = BoolLit.getInstance(false);
+                    }
+                    break;
+                
+                // I'm not sure what to do about the binary arithmetic operations yet, so I'm leaving them out
+                case "number?":
+                    // number? only accept 1 argument
+                    if (args.getCar() != null)
+                        result = new StringLit("Error: wrong number of arguments for 'number?'");
+                    else
+                    {
+                        if (args.getCar().isNumber())
+                            result = BoolLit.getInstance(true);
+                        else
+                            result = BoolLit.getInstance(false);
+                    }
+                    break;
+
+                case "car":
+
+                default:
+                    result = new StringLit("Error: BuiltIn.apply() called for non BuiltIn function.");
+                    break;
+            }
+            return result;
     	}
     }    
 }

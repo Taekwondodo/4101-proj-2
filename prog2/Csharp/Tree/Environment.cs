@@ -40,7 +40,7 @@ namespace Tree
         // Instead of Nil(), we use null to terminate the list.
 
         private Node frame;     	// the innermost scope, an assoc list
-	private Environment env;	// the enclosing environment
+	    private Environment env;	// the enclosing environment
    
         public Environment()
         {
@@ -49,7 +49,7 @@ namespace Tree
         }
    
         public Environment(Environment e)
-	{
+	    {
             frame = Nil.getInstance();
             env = e;
         }
@@ -76,12 +76,14 @@ namespace Tree
                 return null;	// in Scheme we'd return #f
             else
             {
-                Node bind = alist.getCar();
+                Node bind = alist.getCar(); 
                 if (id.getName().Equals(bind.getCar().getName()))
+                    // If we found the target frame
                     // return a list containing the value as only element
                     return bind.getCdr();
                 else
-                    return find(id, alist.getCdr());
+                    // Frame isn't a match, go to the next element
+                    return find(id, alist.getCdr()); 
             }
         }
 
@@ -89,7 +91,7 @@ namespace Tree
         public Node lookup(Node id)
         {
             Node val = find(id, frame);
-            if (val == null && env == null)
+            if (val == null && env == null) // We've reached the top-level environment
             {
                 Console.Error.WriteLine("undefined variable " + id.getName());
                 return null;
@@ -99,19 +101,50 @@ namespace Tree
                 return env.lookup(id);
             else
                 // get the value out of the list we got from find()
-		return val.getCar();
+		        return val.getCar();
         }
 
 
         public void define(Node id, Node val)
         {
-            // TODO: implement this function
+            Node oldVal = find(id, frame);
+            if (oldVal != null)
+                // id exists in environment, update the value
+                oldVal.setCar(val);
+            else
+            {
+                // Add the new frame to the environment (front of the association list)    
+                Node newFrame = new Cons(new Cons(id, new Cons(val, null)), null); // New variable for clarity
+                if (!frame.isPair())
+                    // This is the first define in the environment
+                    frame = newFrame;
+                else
+                {
+                    newFrame.setCdr(frame);
+                    frame = newFrame;
+                }
+            }           
         }
 
 
         public void assign(Node id, Node val)
         {
-            // TODO: implement this function
+            Node oldVal = find(id, frame);
+            if (oldVal != null)
+                // id exists in immediate environment, update value
+                oldVal.setCar(val);
+            else if (env != null)
+            {
+                // Look and see if the id exists in the enclosing scope
+                oldVal = find(id, env.frame);
+                if (oldVal != null)
+                    // id exists in enclosing scope, update value
+                    oldVal.setCar(val);
+                else
+                    Console.Error.WriteLine("Attempting to set! '" + id.getName() + "' before it has been defined.");
+            }
+            else
+                Console.Error.WriteLine("Attempting to set! '" + id.getName() + "' before it has been defined.");
         }
     }
 }

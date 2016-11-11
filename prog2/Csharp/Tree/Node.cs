@@ -6,6 +6,11 @@ namespace Tree
 {
     public class Node : INode
     {
+        // We're going to access the parser by including it as a field. We'll need it for builtin read
+        public Parser parser;
+        public Node() { }
+        public Node(Parser p) { parser = p; }
+
         // The argument of print(int) is the number of characters to indent.
         // Every subclass of Node must implement print(int).
         public virtual void print(int n) { }
@@ -76,6 +81,11 @@ namespace Tree
         public virtual string getName()
         {
             return "";
+        }
+
+        public virtual void eval(Environment env)
+        {
+            Console.Error.WriteLine("Error: eval() has not been overridden");
         }
     }
 }

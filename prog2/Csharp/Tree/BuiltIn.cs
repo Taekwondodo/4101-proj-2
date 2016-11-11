@@ -42,17 +42,36 @@ namespace Tree
                 Console.WriteLine();
         }
 
+        public int numArguments(Node args)
+        {
+            if (args.isPair() == true)
+                return 1 + numArguments(args.getCdr());
+            else
+                return 0;
+        }
+
         // TODO: The method apply() should be defined in class Node
         // to report an error.  It should be overridden only in classes
         // BuiltIn and Closure.
         public override Node apply(Node args)
         {
             Node result = new Node();
+            int numArgs = numArguments(args);
+
             switch (symbol.getName())
             {
+                case "read":
+                    result = args.getCar().parser.parseExp();
+                    break;
+                case "write":
+                    args.getCar().print(0);
+                    // Not sure what Node to return here. Probably just return the blank Node
+                    break;
+                case "eval":
+
                 case "symbol?":
                     // symbol? only accepts 1 argument
-                    if (args.getCdr() != null)
+                    if (numArgs != 1)
                         result = new StringLit("Error: wrong number of arguments for 'symbol?'");
                     else
                     {
@@ -66,7 +85,7 @@ namespace Tree
                 // I'm not sure what to do about the binary arithmetic operations yet, so I'm leaving them out
                 case "number?":
                     // number? only accept 1 argument
-                    if (args.getCar() != null)
+                    if (numArgs != 1)
                         result = new StringLit("Error: wrong number of arguments for 'number?'");
                     else
                     {
@@ -83,6 +102,61 @@ namespace Tree
                     result = new StringLit("Error: BuiltIn.apply() called for non BuiltIn function.");
                     break;
             }
+
+            // Now we check for the binary arithmetic builtins
+            IntLit num1 = new IntLit(0), num2;
+            if (symbol.getName() == "b/") // The division function has 1 as the default value instead of 0 when only 1 argument is provided
+                num1 = new IntLit(1);
+
+            // If the arguments aren't numerical, the IntLit casts will fail and the catch block executes.
+            // If there are 0 arguments the first cast will fail, and if there are more than 2 an Exception is thrown
+            try
+            {
+                num2 = (IntLit)args.getCar();
+                // Check for a second argument
+                if (args.getCdr().isPair() == true)
+                {
+                    // We do this swap because if we have only 1 argument, we're doing 0 - num2. If we have 2, we're doing num1-num2.
+                    num1 = num2;
+                    num2 = (IntLit)args.getCdr().getCar();
+                    if (args.getCdr().getCdr() != null)
+                        throw new Exception();
+                }                   
+                else if (symbol.getName() == "b=" || symbol.getName() == "b<")
+                    return result = new StringLit("Error: binary arithmetic operation '" + symbol.getName() + "' expects two 2 arguments.");
+            }
+            catch
+            {
+                return result = new StringLit("Error: binary arithmetic operations expect 1 or 2 numerical arguments.");
+            }
+
+            if (symbol.getName() == "b+")
+                result = new IntLit(num1.getInt() + num2.getInt());
+            else if (symbol.getName() == "b-")
+                result = new IntLit(num1.getInt() - num2.getInt());
+            else if (symbol.getName() == "b*")
+                result = new IntLit(num1.getInt() * num2.getInt());
+            else if (symbol.getName() == "b/")
+            {
+                if (num2.getInt() == 0)
+                    return result = new StringLit("Error: Dividing by 0.");
+                result = new IntLit(num1.getInt() / num2.getInt());
+            }
+            else if (symbol.getName() == "b=")
+            {
+                if (num1.getInt() == num2.getInt())
+                    result = BoolLit.getInstance(true);
+                else
+                    result = BoolLit.getInstance(false);
+            }
+            else if (symbol.getName() == "b<")
+            {
+                if (num1.getInt() < num2.getInt())
+                    result = BoolLit.getInstance(true);
+                else
+                    result = BoolLit.getInstance(false);
+            }
+               
             return result;
     	}
     }    

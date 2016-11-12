@@ -54,9 +54,11 @@ namespace Tree
             }
         }
 
-        public override Node eval(Environment env)
+        public override Node eval(Environment env, Node args = null)
         {
-            
+            if (form.GetType().Name == "Special.Regular")
+                return form.eval(env, this);
+            return form.eval(env, cdr);
         }
 
         public override void print(int n)

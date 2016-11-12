@@ -1,11 +1,17 @@
 // Node -- Base class for parse tree node objects
 
 using System;
+using Parse;
 
 namespace Tree
 {
     public class Node : INode
     {
+        // We're going to access the parser by including it as a field. We'll need it for builtin read
+        public Parser parser;
+        public Node() { }
+        public Node(Parser p) { parser = p; }
+
         // The argument of print(int) is the number of characters to indent.
         // Every subclass of Node must implement print(int).
         public virtual void print(int n) { }
@@ -79,15 +85,15 @@ namespace Tree
             return "";
         }
 
-        public virtual Node eval()
-        {
-            Console.Error.WriteLine("Error: Something, idk yet");
-            return null;
-        }
-
         public virtual Node apply(Node args) //Built-In apply()
         {
             Console.Error.WriteLine("Error: argument of apply is not a procedure (I think?)");
+            return null;
+        }
+
+        public virtual Node eval(Environment env, Node args = null) // args is only optional for cons.eval()
+        {
+            Console.Error.WriteLine("Error: eval() has not been overridden");
             return null;
         }
     }

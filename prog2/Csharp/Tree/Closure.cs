@@ -43,9 +43,35 @@ namespace Tree
         // TODO: The method apply() should be defined in class Node
         // to report an error.  It should be overridden only in classes
         // BuiltIn and Closure.
-        public /* override */ Node apply (Node args)
+        public override Node apply (Node args)
         {
-            return new StringLit("Error: Closure.apply not yet implemented");
+            Environment closureEnv = new Environment(env);
+            Node parameters = fun.getCar(), body = args.getCdr().getCar();
+
+            // lambda expression of the form 'lambda identifier exp+'
+            if (parameters.isPair() == false)
+            {
+                if (args.getCdr() != null)
+                    return new StringLit("Error: Too many arguments supplied for lambda expression.");
+                closureEnv.define(parameters, args.getCar());
+            }
+            // lambda expression of the form 'lambda ( [ parm ] ) exp+'
+            else
+            {
+                do
+                {
+                    closureEnv.define(parameters.getCar(), args.getCar());
+                    parameters = parameters.getCdr();
+                    args = args.getCdr();
+
+                } while (parameters.getCdr() != null || args.getCdr() != null);
+
+                if (!(parameters.getCdr() == null && args.getCdr() == null))
+                    return new StringLit("Error: # of arguments does not match # of parameters in lambda expression.");
+            }
+
+           // Evaluate the body
+           return body.eval(closureEnv);
         }
     }    
 }

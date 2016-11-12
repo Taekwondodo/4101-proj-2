@@ -47,7 +47,7 @@ public class Scheme4101
         // Create parser
         TreeBuilder builder = new TreeBuilder();
         Parser parser = new Parser(scanner, builder);
-        Node root;
+        Node root = new Node(parser); 
 
         // TODO: Create and populate the built-in environment and
         // create the top-level environment

@@ -11,6 +11,14 @@ namespace Tree
     abstract public class Special
     {
         public abstract void print(Node t, int n, bool p);
+
+        public virtual Node eval(Environment env, Node args)
+        {
+            Console.Error.WriteLine("Error: eval() not overidden");
+            return null;
+        }
     }
+
+    
 }
 

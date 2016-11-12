@@ -12,6 +12,10 @@ namespace Tree
         {
             Printer.printLambda(t, n, p);
   	}
+        public override Node eval(Environment env, Node args)
+        {
+            return new Closure(args, env);
+        }
     }
 }
 

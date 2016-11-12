@@ -53,7 +53,12 @@ namespace Tree
                     form = new Regular();
             }
         }
- 
+
+        public override Node eval(Environment env)
+        {
+            
+        }
+
         public override void print(int n)
         {
             form.print(this, n, false);

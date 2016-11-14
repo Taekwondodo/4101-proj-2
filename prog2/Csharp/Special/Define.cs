@@ -17,12 +17,12 @@ namespace Tree
         {
             Node expr1 = args.getCar();
 
-            if (args.getCdr() == null)
+            if (args.getCdr().isNull() == true)
                 return new StringLit("Error: Only 1 argument passed to 'define.'");
-            else if (args.getCdr().getCdr() != null)
+            else if (args.getCdr().getCdr().isNull() == false)
                 return new StringLit("Error: Too many arguments passed to 'define.'");
-            // Is this defining a function?
-            else if (expr1.getCar().isPair() == true)
+            // Is this defining a function? 
+            else if (expr1.isPair() == true)
             {
                 if (expr1.getCar().isSymbol() == true)
                 {

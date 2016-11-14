@@ -18,12 +18,11 @@ namespace Tree
             // Evaluate the list
             Node evaluated = new Cons(args.getCar().eval(env), args.getCdr().eval(env));
 
-            // If we the car is a closure, apply it
+            // If the car is a closure, apply it
             if (evaluated.getCar().isProcedure())
                 return evaluated.getCar().apply(evaluated.getCdr());
             else
                 return evaluated;
-  
         }
 
     }

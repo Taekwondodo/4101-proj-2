@@ -60,13 +60,33 @@ namespace Tree
 
             switch (symbol.getName())
             {
+                case "begin":
+                    // The value(s) of the last expression is(are) returned
+                    while (args.getCdr().isNull() == false)
+                        args = args.getCdr();
+                    result = args.getCar();
+                    break;
+
+                case "cond":
+                    // The value(s) of the last expression is(are) returned
+                    while (args.getCdr().isNull() == false)
+                        args = args.getCdr();
+                    result = args.getCar();
+                    break;
+
+                case "if":
+                    result = args.getCar();
+                    break;
+
                 case "read":
                     result = (Node)args.parser.parseExp();
                     break;
+
                 case "write":
                     args.print(0);
                     // Not sure what Node to return here. Probably just return the blank Node
                     break;
+
                 case "symbol?":
                     // symbol? only accepts 1 argument
                     if (numArgs != 1)
@@ -79,9 +99,10 @@ namespace Tree
                             result = BoolLit.getInstance(false);
                     }
                     break; 
+
                 case "number?":
                     // number? only accepts 1 argument
-                    if (args.getCdr() != null)
+                    if (args.getCdr().isNull() == false)
                     // number? only accepts 1 argument
                     if (numArgs != 1)
                         result = new StringLit("Error: wrong number of arguments for 'number?'");
@@ -108,14 +129,14 @@ namespace Tree
                     break;
                 case "cons":
                     // make sure only two arguments are provided
-                    if (args.getCdr().isPair() != true && args.getCdr().getCdr() != null) 
+                    if (args.getCdr().isPair() != true && args.getCdr().getCdr().isNull() == false) 
                         result = new StringLit("Error: Function 'cons' requires two arguments.");
                     else
                         result = args;
                     break;
                 case "set-car!":
                     // make sure only a list and value are provided
-                    if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr() != null)
+                    if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr().isNull() == false)
                         result = new StringLit("Error: Function 'set-car!' requires a list and value");
                     else
                     {
@@ -125,7 +146,7 @@ namespace Tree
                     break;
                 case "set-cdr!":
                     // make sure only a list and value are provided
-                    if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr() != null)
+                    if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr().isNull() == false)
                         result = new StringLit("Error: Function 'set-cdr!' requires a list and value");
                     else
                     {
@@ -134,7 +155,7 @@ namespace Tree
                     }
                     break;
                 case "null?":
-                    if (args.getCar() == null)
+                    if (args.getCar().isNull() == true)
                         result = BoolLit.getInstance(true);
                     // null? only accepts one argument
                     else if (args.getCdr().isPair() == true)
@@ -153,7 +174,7 @@ namespace Tree
                     break;
                 case "eq?":
                     // eq? only accepts two arguments
-                    if (args.getCdr().getCdr() != null)
+                    if (args.getCdr().getCdr().isNull() == false)
                         result = new StringLit("Error: 'eq?' only accepts one argument");
                     else if (args.getCar() == args.getCdr().getCar()) // Not sure if this is going to work, actually
                         result = BoolLit.getInstance(true);
@@ -162,7 +183,7 @@ namespace Tree
                     break;
                 case "procedure?":
                     //procedure only accepts 1 argument (I think)
-                    if (args.getCdr() != null)
+                    if (args.getCdr().isNull() == false)
                         result = new StringLit("Error: 'procedure?' only accepts one argument");
                     else if (args.getCar().isProcedure() == true)
                         result = BoolLit.getInstance(true);
@@ -190,11 +211,11 @@ namespace Tree
                     // We do this swap because if we have only 1 argument, we're doing 0 - num2. If we have 2, we're doing num1-num2.
                     num1 = num2;
                     num2 = (IntLit)args.getCdr().getCar();
-                    if (args.getCdr().getCdr() != null)
+                    if (args.getCdr().getCdr().isNull() == false)
                         throw new Exception();
                 }                   
                 else if (symbol.getName() == "b=" || symbol.getName() == "b<")
-                    return result = new StringLit("Error: binary arithmetic operation '" + symbol.getName() + "' expects two 2 arguments.");
+                    return result = new StringLit("Error: binary arithmetic operation '" + symbol.getName() + "' expects two numerical 2 arguments.");
             }
             catch
             {

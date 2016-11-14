@@ -27,5 +27,10 @@ namespace Tree
         {
             return true;
         }
+
+        public override Node eval(Environment env, Node args = null)
+        {
+            return new IntLit(intVal); // not sure if we should create a new one or just return this. Creating a new one to be safe
+        }
     }
 }

@@ -46,13 +46,14 @@ namespace Tree
         public override Node apply (Node args)
         {
             Environment closureEnv = new Environment(env);
-            Node parameters = fun.getCar(), body = args.getCdr().getCar();
+            Node parameters = fun.getCar(), body = fun.getCdr().getCar();
 
             // lambda expression of the form 'lambda identifier exp+'
             if (parameters.isPair() == false)
             {
-                if (args.getCdr() != null)
+                if (args.getCdr().isNull() == false)
                     return new StringLit("Error: Too many arguments supplied for lambda expression.");
+
                 closureEnv.define(parameters, args.getCar());
             }
             // lambda expression of the form 'lambda ( [ parm ] ) exp+'
@@ -64,9 +65,10 @@ namespace Tree
                     parameters = parameters.getCdr();
                     args = args.getCdr();
 
-                } while (parameters.getCdr() != null || args.getCdr() != null);
+                } while (parameters.isNull() == false && args.isNull() == false);
 
-                if (!(parameters.getCdr() == null && args.getCdr() == null))
+                // If both aren't null, then the # of arguments and parameters don't match
+                if (!(parameters.isNull() == true && args.isNull() == true))
                     return new StringLit("Error: # of arguments does not match # of parameters in lambda expression.");
             }
 

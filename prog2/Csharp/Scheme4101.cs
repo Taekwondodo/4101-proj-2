@@ -47,13 +47,28 @@ public class Scheme4101
         // Create parser
         TreeBuilder builder = new TreeBuilder();
         Parser parser = new Parser(scanner, builder);
-        Node root = new Node(parser); 
+        Node root = new Node(parser);
 
         // TODO: Create and populate the built-in environment and
         // create the top-level environment
 
+        Tree.Environment globalEnv = new Tree.Environment();
+        Ident id = new Ident("read");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("b+");
+        globalEnv.define(id, new BuiltIn(id));
+
+        Tree.Environment topEnv = new Tree.Environment(globalEnv);
+
         // Read-eval-print loop
 
+        root = (Node)parser.parseExp();
+        while (root != null)
+        {
+            root.eval(topEnv).print(0);
+            root = (Node)parser.parseExp();
+        }
+        /*
         // TODO: print prompt and evaluate the expression
         root = (Node) parser.parseExp();
         while (root != null) 
@@ -61,7 +76,7 @@ public class Scheme4101
             root.print(0);
             root = (Node) parser.parseExp();
         }
-
+        */
         return 0;
     }
 }

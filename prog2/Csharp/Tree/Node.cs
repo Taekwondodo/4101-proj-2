@@ -93,7 +93,7 @@ namespace Tree
 
         public virtual Node eval(Environment env, Node args = null) // args is only optional for cons.eval()
         {
-            Console.Error.WriteLine("Error: eval() has not been overridden");
+            Console.Error.WriteLine("Error: eval() has not been overridden in " + this.GetType().Name);
             return null;
         }
     }

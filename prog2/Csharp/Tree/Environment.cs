@@ -115,14 +115,10 @@ namespace Tree
             {
                 // Add the new frame to the environment (front of the association list)    
                 Node newFrame = new Cons(new Cons(id, new Cons(val, null)), null); // New variable for clarity
-                if (!frame.isPair())
-                    // This is the first define in the environment
-                    frame = newFrame;
-                else
-                {
-                    newFrame.setCdr(frame);
-                    frame = newFrame;
-                }
+
+                newFrame.setCdr(frame);
+                frame = newFrame;
+               
             }           
         }
 

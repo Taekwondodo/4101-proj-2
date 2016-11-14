@@ -56,9 +56,11 @@ namespace Tree
 
         public override Node eval(Environment env, Node args = null)
         {
-            if (form.GetType().Name == "Special.Regular")
-                return form.eval(env, this);
-            return form.eval(env, cdr);
+            // Lazy fix because I did define first of whom's apply isn't within BuiltIn
+            if (form.GetType().Name == "Define" || form.GetType().Name == "Lambda")
+                return form.eval(env, cdr);
+
+            return form.eval(env, this);
         }
 
         public override void print(int n)

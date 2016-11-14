@@ -79,11 +79,15 @@ namespace Tree
                         return args.getCdr().getCdr().getCar();
                     else
                         return new StringLit("#unspecified");
+
                 case "let":
                     // The value(s) of the last expression is(are) returned
                     while (args.getCdr().isNull() == false)
                         args = args.getCdr();
                     return args.getCar();
+
+                case "quote":
+                    return args.getCdr().getCar();
 
                 case "read":
                     return (Node)args.parser.parseExp();

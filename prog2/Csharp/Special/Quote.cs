@@ -15,7 +15,7 @@ namespace Tree
 
         public override Node eval(Environment env, Node args)
         {
-            return base.eval(env, args);
+            return args.getCar().eval(env).apply(args);
         }
     }
 }

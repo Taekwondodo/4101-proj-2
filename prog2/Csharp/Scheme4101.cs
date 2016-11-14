@@ -50,16 +50,23 @@ public class Scheme4101
         Node root = new Node(parser);
 
         // TODO: Create and populate the built-in environment and
-        // create the top-level environment
-
         Tree.Environment globalEnv = new Tree.Environment();
-        Ident id = new Ident("read");
+
+        Ident id = new Ident("begin");
         globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("cond");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("if");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("read");
+        globalEnv.define(id, new BuiltIn(id));
+
         id = new Ident("b+");
         globalEnv.define(id, new BuiltIn(id));
-        id = new Ident("begin");
+        id = new Ident("b<");
         globalEnv.define(id, new BuiltIn(id));
 
+        // create the top-level environment
         Tree.Environment topEnv = new Tree.Environment(globalEnv);
 
         // Read-eval-print loop

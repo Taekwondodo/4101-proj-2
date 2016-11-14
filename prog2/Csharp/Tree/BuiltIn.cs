@@ -55,7 +55,7 @@ namespace Tree
         // BuiltIn and Closure.
         public override Node apply(Node args)
         {
-            Node result = new Node();
+            Node result = null;
             int numArgs = numArguments(args);
 
             switch (symbol.getName())
@@ -64,23 +64,24 @@ namespace Tree
                     // The value(s) of the last expression is(are) returned
                     while (args.getCdr().isNull() == false)
                         args = args.getCdr();
-                    result = args.getCar();
-                    break;
+                    return args.getCar();
 
                 case "cond":
                     // The value(s) of the last expression is(are) returned
                     while (args.getCdr().isNull() == false)
                         args = args.getCdr();
-                    result = args.getCar();
-                    break;
+                    return args.getCar();
 
                 case "if":
-                    result = args.getCar();
-                    break;
+                    if (args.getCar() == BoolLit.getInstance(true))
+                        return args.getCdr().getCar();
+                    else if (args.getCdr().getCdr().isPair())
+                        return args.getCdr().getCdr().getCar();
+                    else
+                        return new StringLit("#unspecified");
 
                 case "read":
-                    result = (Node)args.parser.parseExp();
-                    break;
+                    return (Node)args.parser.parseExp();
 
                 case "write":
                     args.print(0);
@@ -90,108 +91,94 @@ namespace Tree
                 case "symbol?":
                     // symbol? only accepts 1 argument
                     if (numArgs != 1)
-                        result = new StringLit("Error: wrong number of arguments for 'symbol?'");
+                        return new StringLit("Error: wrong number of arguments for 'symbol?'");
                     else
                     {
                         if (args.getCar().isSymbol())
-                            result = BoolLit.getInstance(true);
+                            return BoolLit.getInstance(true);
                         else
-                            result = BoolLit.getInstance(false);
+                            return BoolLit.getInstance(false);
                     }
-                    break; 
 
                 case "number?":
                     // number? only accepts 1 argument
-                    if (args.getCdr().isNull() == false)
-                    // number? only accepts 1 argument
                     if (numArgs != 1)
-                        result = new StringLit("Error: wrong number of arguments for 'number?'");
+                        return new StringLit("Error: wrong number of arguments for 'number?'");
                     else
                     {
                         if (args.getCar().isNumber())
-                            result = BoolLit.getInstance(true);
+                            return BoolLit.getInstance(true);
                         else
-                            result = BoolLit.getInstance(false);
+                            return BoolLit.getInstance(false);
                     }
-                    break;
 
                 case "car":
                     if (args.isPair() == false)
-                        result = new StringLit("Error: Argument to 'car' is not a pair.");
+                        return new StringLit("Error: Argument to 'car' is not a pair.");
                     else
-                        result = args.getCar();
-                    break;
+                        return args.getCar();
                 case "cdr":
                     if (args.isPair() == false)
-                        result = new StringLit("Error: Argument to 'cdr' is not a pair.");
+                        return new StringLit("Error: Argument to 'cdr' is not a pair.");
                     else
-                        result = args.getCdr();
-                    break;
+                        return args.getCdr();
                 case "cons":
                     // make sure only two arguments are provided
-                    if (args.getCdr().isPair() != true && args.getCdr().getCdr().isNull() == false) 
-                        result = new StringLit("Error: Function 'cons' requires two arguments.");
+                    if (args.getCdr().isPair() != true && args.getCdr().getCdr().isNull() == false)
+                        return new StringLit("Error: Function 'cons' requires two arguments.");
                     else
-                        result = args;
-                    break;
+                        return args;
                 case "set-car!":
                     // make sure only a list and value are provided
                     if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr().isNull() == false)
-                        result = new StringLit("Error: Function 'set-car!' requires a list and value");
+                        return new StringLit("Error: Function 'set-car!' requires a list and value");
                     else
                     {
                         args.getCar().setCar(args.getCdr().getCar());
-                        result = new StringLit("no values returned;");
+                        return new StringLit("no values returned;");
                     }        
-                    break;
                 case "set-cdr!":
                     // make sure only a list and value are provided
                     if (args.getCar().isPair() == false || args.getCdr().getCar().isPair() == true || args.getCdr().getCdr().isNull() == false)
-                        result = new StringLit("Error: Function 'set-cdr!' requires a list and value");
+                        return new StringLit("Error: Function 'set-cdr!' requires a list and value");
                     else
                     {
                         args.getCar().setCdr(args.getCdr().getCar());
-                        result = new StringLit("no values returned;");
+                        return new StringLit("no values returned;");
                     }
-                    break;
                 case "null?":
                     if (args.getCar().isNull() == true)
-                        result = BoolLit.getInstance(true);
+                        return BoolLit.getInstance(true);
                     // null? only accepts one argument
                     else if (args.getCdr().isPair() == true)
-                        result = new StringLit("Error: 'null?' only accept one argument.");
+                        return new StringLit("Error: 'null?' only accept one argument.");
                     else
-                        result = BoolLit.getInstance(false);
-                    break;
+                        return BoolLit.getInstance(false);
                 case "pair?":
                     // pair? only accept one argument
                     if (args.getCdr().isPair() == true)
-                        result = new StringLit("Error: 'pair?' only accepts one argument.");
+                        return new StringLit("Error: 'pair?' only accepts one argument.");
                     else if (args.getCar().isPair())
-                        result = BoolLit.getInstance(true);
+                        return BoolLit.getInstance(true);
                     else
-                        result = BoolLit.getInstance(false);
-                    break;
+                        return BoolLit.getInstance(false);
                 case "eq?":
                     // eq? only accepts two arguments
                     if (args.getCdr().getCdr().isNull() == false)
-                        result = new StringLit("Error: 'eq?' only accepts one argument");
+                        return new StringLit("Error: 'eq?' only accepts one argument");
                     else if (args.getCar() == args.getCdr().getCar()) // Not sure if this is going to work, actually
-                        result = BoolLit.getInstance(true);
+                        return BoolLit.getInstance(true);
                     else
-                        result = BoolLit.getInstance(false);
-                    break;
+                        return BoolLit.getInstance(false);
                 case "procedure?":
                     //procedure only accepts 1 argument (I think)
                     if (args.getCdr().isNull() == false)
-                        result = new StringLit("Error: 'procedure?' only accepts one argument");
+                        return new StringLit("Error: 'procedure?' only accepts one argument");
                     else if (args.getCar().isProcedure() == true)
-                        result = BoolLit.getInstance(true);
+                        return BoolLit.getInstance(true);
                     else
-                        result = BoolLit.getInstance(false);
-                    break;
+                        return BoolLit.getInstance(false);
                 default:
-                    result = new StringLit("Error: BuiltIn.apply() called for non BuiltIn function.");
                     break;
             }
 

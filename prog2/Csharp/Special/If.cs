@@ -15,6 +15,7 @@ namespace Tree
 
         public override Node eval(Environment env, Node args)
         {
+            /*
             Node builtIn = args.getCar(), test = args.getCdr().getCar();
 
             if (test.eval(env) != BoolLit.getInstance(false))
@@ -25,6 +26,9 @@ namespace Tree
                 return builtIn.apply(args.getCdr().getCdr().getCdr().getCar().eval(env));
             else
                 return new StringLit("#unspecified");
+            */
+
+           return args.getCar().eval(env).apply(new Cons(args.getCdr().getCar().eval(env), args.getCdr().getCdr().eval(env)));
 
         }
     }

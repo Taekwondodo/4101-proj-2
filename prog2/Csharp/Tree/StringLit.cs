@@ -22,6 +22,11 @@ namespace Tree
         {
             return true;
         }
+
+        public override Node eval(Environment env, Node args = null)
+        {
+            return new StringLit(stringVal);
+        }
     }
 }
 

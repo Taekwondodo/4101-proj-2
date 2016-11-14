@@ -26,20 +26,26 @@ namespace Tree
                     break;
                 result = test.eval(env);
 
-            } while (cases.getCdr() != null && result == BoolLit.getInstance(false));
+            } while (cases.getCdr().isNull() == false && result == BoolLit.getInstance(false));
 
             // if a expr value returned true or we hit an else clause
             if (result != BoolLit.getInstance(false) || test.getName() == "else")
             {
                 // If there was a test with no other expressions, apply the test
-                if (cases.getCar().getCdr() == null)
-                    return args.getCar().apply(result);
+                if (cases.getCar().getCdr().isNull() == true)
+                    return args.getCar().eval(env).apply(result);
                 // Otherwise apply the following expressions
                 else
-                    return args.getCar().apply(cases.getCar().getCdr().eval(env));
+                {
+                    Node debug = cases.getCar().getCdr(), debug2 = args.getCar();
+                    return args.getCar().eval(env).apply(cases.getCar().getCdr().eval(env));
+                }
+                    
             }
             else
                 return new StringLit("#unspecified");
+
+   
              
 
         }

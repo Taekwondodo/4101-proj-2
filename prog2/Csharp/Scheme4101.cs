@@ -57,6 +57,8 @@ public class Scheme4101
         globalEnv.define(id, new BuiltIn(id));
         id = new Ident("b+");
         globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("begin");
+        globalEnv.define(id, new BuiltIn(id));
 
         Tree.Environment topEnv = new Tree.Environment(globalEnv);
 

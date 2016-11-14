@@ -46,7 +46,7 @@ namespace Tree
         public override Node apply (Node args)
         {
             Environment closureEnv = new Environment(env);
-            Node parameters = fun.getCar(), body = fun.getCdr().getCar();
+            Node parameters = fun.getCdr().getCar(), body = fun.getCdr().getCdr().getCar();
 
             // lambda expression of the form 'lambda identifier exp+'
             if (parameters.isPair() == false)
@@ -59,14 +59,13 @@ namespace Tree
             // lambda expression of the form 'lambda ( [ parm ] ) exp+'
             else
             {
-                do
+                while (parameters.isPair() == true && args.isPair() == true)
                 {
                     closureEnv.define(parameters.getCar(), args.getCar());
                     parameters = parameters.getCdr();
                     args = args.getCdr();
-
-                } while (parameters.isNull() == false && args.isNull() == false);
-
+                }  
+                   
                 // If both aren't null, then the # of arguments and parameters don't match
                 if (!(parameters.isNull() == true && args.isNull() == true))
                     return new StringLit("Error: # of arguments does not match # of parameters in lambda expression.");

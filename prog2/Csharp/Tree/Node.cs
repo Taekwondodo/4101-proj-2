@@ -87,7 +87,7 @@ namespace Tree
 
         public virtual Node apply(Node args) //Built-In apply()
         {
-            Console.Error.WriteLine("Error: argument of apply is not a procedure (I think?)");
+            Console.Error.WriteLine("Error: argument of apply is not a procedure " + this.GetType().Name);
             return null;
         }
 

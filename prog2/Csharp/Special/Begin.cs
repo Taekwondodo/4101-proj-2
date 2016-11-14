@@ -15,12 +15,13 @@ namespace Tree
 
         public override Node eval(Environment env, Node args)
         {
-            if (args == null)
+            if (args.isNull() == true)
                 return new StringLit("Error: 'begin' requires at least 1 argument.");
 
             Node evaluated = new Cons(args.getCdr().getCar().eval(env), args.getCdr().getCdr().eval(env));
 
-            return args.getCar().apply(evaluated);
+            // evaluate the car which is 'begin', then begin.apply()
+            return args.getCar().eval(env).apply(evaluated);
 
         }
     }

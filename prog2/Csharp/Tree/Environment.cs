@@ -93,7 +93,7 @@ namespace Tree
             Node val = find(id, frame);
             if (val == null && env == null) // We've reached the top-level environment
             {
-                Console.Error.WriteLine("undefined variable " + id.getName());
+                Console.Error.WriteLine("Error: undefined variable " + id.getName());
                 return null;
             }
             else if (val == null)
@@ -105,12 +105,16 @@ namespace Tree
         }
 
 
-        public void define(Node id, Node val)
+        public Node define(Node id, Node val)
         {
             Node oldVal = find(id, frame);
             if (oldVal != null)
+            {
                 // id exists in environment, update the value
                 oldVal.setCar(val);
+                return new StringLit("no values returned.");
+            }
+
             else
             {
                 // Add the new frame to the environment (front of the association list)    
@@ -118,29 +122,38 @@ namespace Tree
 
                 newFrame.setCdr(frame);
                 frame = newFrame;
+
+                return new StringLit("no values returned.");
                
             }           
         }
 
 
-        public void assign(Node id, Node val)
+        public Node assign(Node id, Node val)
         {
             Node oldVal = find(id, frame);
             if (oldVal != null)
+            {
                 // id exists in immediate environment, update value
                 oldVal.setCar(val);
+                return new StringLit("no values returned.");
+            }
             else if (env != null)
             {
                 // Look and see if the id exists in the enclosing scope
                 oldVal = find(id, env.frame);
                 if (oldVal != null)
+                {
                     // id exists in enclosing scope, update value
                     oldVal.setCar(val);
+                    return new StringLit("no values returned.");
+                }
+                    
                 else
-                    Console.Error.WriteLine("Attempting to set! '" + id.getName() + "' before it has been defined.");
+                    return new StringLit("Error: Attempting to set! '" + id.getName() + "' before it has been defined.");
             }
             else
-                Console.Error.WriteLine("Attempting to set! '" + id.getName() + "' before it has been defined.");
+                return new StringLit("Error: Attempting to set! '" + id.getName() + "' before it has been defined.");
         }
     }
 }

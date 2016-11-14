@@ -29,9 +29,8 @@ namespace Tree
                     // Construct the lambda expression
                     Node formalsAndBody = new Cons(expr1.getCdr(), args.getCdr());
                     Node lambdaExpr = new Cons(new Ident("lambda"), formalsAndBody);
-                    // define.apply()
-                    env.define(expr1.getCar(), lambdaExpr.eval(env));
-                    return new StringLit("No values returned.");
+                    // define.apply()          
+                    return env.define(expr1.getCar(), lambdaExpr.eval(env));
                 }
                 else
                     return new StringLit("Error: First argument to 'define' must be a <variable>");
@@ -41,8 +40,7 @@ namespace Tree
                 if (expr1.isSymbol() == true)
                 {
                     // define.apply()
-                    env.define(expr1, args.getCdr().getCar().eval(env));
-                    return new StringLit("No values returned.");
+                    return env.define(expr1, args.getCdr().getCar().eval(env));
                 }
                 else
                     return new StringLit("Error: First argument to 'define' must be a <variable>");

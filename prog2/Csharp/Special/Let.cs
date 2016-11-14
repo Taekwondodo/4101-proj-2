@@ -15,38 +15,27 @@ namespace Tree
 
         public override Node eval(Environment env, Node args)
         {
-            Node expr1 = args.getCar();
+            // Evaluate the inits in the current env and bind the variables to them in the new env
+            Node binding = args.getCdr().getCar();
+            Environment letEnv = new Environment(env);
 
-            if (args.getCdr().isNull() == true)
-                return new StringLit("Error: Only 1 argument passed to 'set!.'");
-            else if (args.getCdr().getCdr().isNull() == false)
-                return new StringLit("Error: Too many arguments passed to 'set!.'");
-            // Is this defining a function? 
-            else if (expr1.isPair() == true)
+            while (binding.isPair())
             {
-                if (expr1.getCar().isSymbol() == true)
-                {
-                    // Construct the lambda expression
-                    Node formalsAndBody = new Cons(expr1.getCdr(), args.getCdr());
-                    Node lambdaExpr = new Cons(new Ident("lambda"), formalsAndBody);
-                    // set!.apply()
-                    env.assign(expr1.getCar(), lambdaExpr.eval(env));
-                    return new StringLit("No values returned.");
-                }
-                else
-                    return new StringLit("Error: First argument to 'set!' must be a <variable>");
+                Node init = binding.getCar().getCdr().getCar().eval(env);
+                Node variable = binding.getCar().getCar();
+                letEnv.define(variable, init);
+
+                binding = binding.getCdr();
             }
-            else
-            {
-                if (expr1.isSymbol() == true)
-                {
-                    // set!.apply()
-                    env.assign(expr1, args.getCdr().getCar().eval(env));
-                    return new StringLit("No values returned.");
-                }
-                else
-                    return new StringLit("Error: First argument to 'set!' must be a <variable>");
-            }
+
+            Node bodyEval = args.getCdr().getCdr().eval(letEnv);
+            return args.getCar().eval(env).apply(bodyEval);
+
+
+
+
+
+
         }
     }
 }

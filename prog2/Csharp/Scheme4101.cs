@@ -58,10 +58,22 @@ public class Scheme4101
         globalEnv.define(id, new BuiltIn(id));
         id = new Ident("if");
         globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("let");
+        globalEnv.define(id, new BuiltIn(id));
         id = new Ident("read");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("quote");
         globalEnv.define(id, new BuiltIn(id));
 
         id = new Ident("b+");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("b-");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("b/");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("b*");
+        globalEnv.define(id, new BuiltIn(id));
+        id = new Ident("b=");
         globalEnv.define(id, new BuiltIn(id));
         id = new Ident("b<");
         globalEnv.define(id, new BuiltIn(id));

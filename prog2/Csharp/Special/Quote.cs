@@ -12,6 +12,11 @@ namespace Tree
         {
             Printer.printQuote(t, n, p);
         }
+
+        public override Node eval(Environment env, Node args)
+        {
+            return base.eval(env, args);
+        }
     }
 }
 
